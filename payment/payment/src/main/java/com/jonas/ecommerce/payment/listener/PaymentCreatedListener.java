@@ -6,6 +6,7 @@ import com.jonas.ecommerce.payment.event.PaymentCreatedEvent;
 import com.jonas.ecommerce.payment.service.PaymentService;
 import com.jonas.ecommerce.payment.streaming.CheckoutProcessor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
@@ -30,5 +31,11 @@ public class PaymentCreatedListener {
                 .setPaymentCode(paymentEntity.getCode())
                 .build();
         checkoutProcessor.output().send(MessageBuilder.withPayload(paymentCreatedEvent).build());
+    }
+
+    @Autowired
+    public PaymentCreatedListener(CheckoutProcessor checkoutProcessor, PaymentService paymentService) {
+        this.checkoutProcessor = checkoutProcessor;
+        this.paymentService = paymentService;
     }
     }
